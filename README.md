@@ -8,7 +8,7 @@ A map-only weather app with live storm cells, lightning, forecast layers and up 
 
 ## Live demo
 
-[Open the live Storm Explorer](https://xweather.run.mcp-use.com/mcp/inspector?server=https%3A%2F%2Fxweather.run.mcp-use.com%2Fmcp&tab=tools) and execute **show-weather-dashboard** for the three-site view, or **show-weather-map** to choose a location.
+[Open Storm Explorer in Manufact Cloud Tools](https://manufact.com/cloud/xweather/servers/f0b72e21-8895-409d-9f99-52eaca9e6495/tools) (requires sign-in and access to the Xweather organization) and execute **show-weather-dashboard** for the three-site view, or **show-weather-map** to choose a location. You can also connect the public MCP endpoint below to an MCP Apps-compatible client.
 
 **MCP endpoint:** `https://xweather.run.mcp-use.com/mcp`  
 **Hosted by:** [Xweather on Manufact](https://manufact.com/cloud/xweather/servers/f0b72e21-8895-409d-9f99-52eaca9e6495/overview)
@@ -17,9 +17,9 @@ The shared demo uses a quota-limited Xweather Developer account. Deploy your own
 
 ## Deploy to Manufact
 
-[![Deploy to Manufact](https://cdn.mcp-use.com/deploy.svg)](https://manufact.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmcp-xweather-template&branch=main&project-name=xweather&port=3000&runtime=node&build-command=npm+run+build&start-command=npm+start+--+--host+0.0.0.0+--with-inspector)
+[![Deploy to Manufact](https://cdn.mcp-use.com/deploy.svg)](https://manufact.com/deploy/start?repository-url=https%3A%2F%2Fgithub.com%2Fmanufacts%2Fmcp-xweather-template&branch=main&project-name=xweather&port=3000&runtime=node&build-command=npm+run+build&start-command=npm+start+--+--host+0.0.0.0)
 
-The button opens Manufact Cloud, clones this public template into your GitHub account, and starts deployment. Choose your organization and repository name. The template builds with `npm run build` and starts with `npm start -- --host 0.0.0.0 --with-inspector` on port 3000.
+The button opens Manufact Cloud, clones this public template into your GitHub account, and starts deployment. Choose your organization and repository name. The template builds with `npm run build` and starts with `npm start -- --host 0.0.0.0` on port 3000. Production serves the MCP endpoint and app assets without mounting the embedded Inspector. Preview the app in your server's Manufact Cloud **Tools** tab; local development includes the Inspector.
 
 A deployment without Xweather credentials starts in labelled sample mode. To enable live weather, add these environment variables in the server's **Environment Variables** settings and redeploy:
 
@@ -32,7 +32,7 @@ A deployment without Xweather credentials starts in labelled sample mode. To ena
 | `XWEATHER_MAPSGL_CLIENT_SECRET` | That browser credential's client secret |
 | `XWEATHER_MAPSGL_RESTRICTED` | `true`, after configuring its domain restrictions |
 
-Create credentials in the [Xweather Developer Portal](https://data.portal.xweather.com/). Restrict the browser credential to your deployed app's hostname and any MCP host iframe origins you intend to support. The server-hosted Inspector uses your deployed hostname; Manufact Cloud's Tools preview uses `manufact.com`, which needs its own allowed-domain entry. Previous credential rejections can remain cached by Xweather's map service for ten minutes after a domain change; reload the preview after that cache expires. Never put server credentials in the browser fields or commit credentials to GitHub. Deployment environment variables stay in Manufact, outside the repository.
+Create credentials in the [Xweather Developer Portal](https://data.portal.xweather.com/). Restrict the browser credential to the MCP host iframe origins you intend to support. Manufact Cloud's Tools preview uses `manufact.com`, which needs its own allowed-domain entry. Local development uses `localhost` and `127.0.0.1`. Previous credential rejections can remain cached by Xweather's map service for ten minutes after a domain change; reload the preview after that cache expires. Never put server credentials in the browser fields or commit credentials to GitHub. Deployment environment variables stay in Manufact, outside the repository.
 
 To deploy from the CLI instead:
 
@@ -43,7 +43,7 @@ npx mcp-use org list
 npx mcp-use deploy --org YOUR_ORG_SLUG --name xweather \
   --env-file .env \
   --build-command 'npm run build' \
-  --start-command 'npm start -- --host 0.0.0.0 --with-inspector'
+  --start-command 'npm start -- --host 0.0.0.0'
 ```
 
 Manufact stores the project link in ignored `.mcp-use/project.json`. Subsequent `npx mcp-use deploy` runs target that server. Set an available custom slug under the server's domain settings, then redeploy to activate it.

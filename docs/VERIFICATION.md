@@ -57,7 +57,7 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - Manufact organization: `xweather`; server `f0b72e21-8895-409d-9f99-52eaca9e6495`; managed server slug `xweather`.
 - First production deployment `084e6736-5886-4651-b6a0-52bc8dd7ea27` reached running with the custom slug active.
 - Live MCP smoke against `https://xweather.run.mcp-use.com/mcp` passed: four tools, two resources, three live sites, 30 storm cells, invalid-input rejection and credential redaction.
-- Public Inspector HTML responds successfully. Visual production-map verification is separate from these protocol checks.
+- At this initial deployment, public Inspector HTML responded successfully. The embedded production Inspector was subsequently removed; the browser checks below record the earlier enabled configuration.
 - The provided logo was downloaded to `public/xweather.png` and reuploaded to Manufact's CDN for both organization and dashboard server branding. MCP metadata references the bundled asset.
 - GitHub source excludes `.env*` (except the placeholder `.env.example`), generated build output and the local project link. A scan of every staged source file found no configured credential values.
 - README includes the official cloud deploy badge, build/start commands, environment setup and the live demo link.
@@ -80,3 +80,9 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - In-map search selects the newly loaded city inside the existing request-sequence guard, so a stale context response cannot open an unrelated city's details.
 - Local browser verification: `show-weather-map` opened Dallas details automatically (29°C, Mostly Cloudy). After closing details and searching `zurich,ch`, the map recentered and reopened the details for Zurich (22°C, Cloudy) without clicking its pin.
 - Typecheck and production build passed for this change. Existing map-library chunk-size warnings remain.
+
+### Production Inspector removal
+
+- Removed the explicit Inspector opt-in from the existing server's start command, the deploy badge and the CLI deployment example. The production command is `npm start -- --host 0.0.0.0`.
+- The README now links to Manufact Cloud Tools, which requires sign-in and organization access, and retains the public MCP endpoint for MCP Apps-compatible clients. Local development still includes the Inspector.
+- The earlier standalone Inspector checks above are historical evidence, not the current production configuration.
