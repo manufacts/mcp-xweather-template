@@ -75,7 +75,7 @@ Keep any configured `.env` private; the repository contains only `.env.example`.
 - **Storms:** radar, observed lightning, storm cells and official alerts. Select a cell for reflectivity, hail probability, movement, observation time and any supplied forecast track/cone.
 - **Next hour:** forecast radar plus lightning and hail threat layers. The timeline spans two hours of history through one hour ahead and explicitly distinguishes observations from forecasts.
 - **Wind / Satellite:** wind particles with temperature shading, or geocolor satellite with alerts.
-- **Places:** numbered pins with current weather, official alert details and intersection with available fresh storm forecast cones. Click the map to add a pin, up to five.
+- **Places:** numbered pins with current weather, official alert details and intersection with available fresh storm forecast cones. A single-city map opens that city's details automatically; searching recenters the map and opens the new city's details when its weather loads. Click the map to add a pin, up to five.
 - **Explain this view:** sends the selected place/cell, time, layers and visible bounds to the host assistant, with uncertainty and snapshot/playback distinctions.
 
 Nine supported layer IDs: `radar`, `satellite-geocolor`, `temperatures`, `wind-particles`, `alerts`, `lightning-strikes`, `stormcells`, `lightning-threats`, `hail-threats`. Coverage and entitlement vary. Observed-only layers are hidden in future playback; the latest custom cell pins are also hidden in historical playback. Lightning outlook requires a future time.

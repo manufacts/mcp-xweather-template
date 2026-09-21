@@ -71,5 +71,12 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - In the public server-hosted Inspector, live radar, temperature shading and wind particles rendered. Three place pins and 30 live storm cells were present. Dallas details showed live weather; a selected cell showed reflectivity, hail probability, movement and its missing-track notice.
 - Xweather initially returned 401 for MapsGL authentication and 403 for Maps layer metadata after the new domain was saved. The map service cached the rejection with `max-age=600,s-maxage=600`; after that cache expired, the same allowed-origin metadata request returned 200. Native MapsGL storm tracks/cones then rendered. This does not verify the separate Weather API cone normalization/exposure path, whose sampled records still lacked tracks.
 - Two later radar tile requests failed, and the UI showed its unavailable-tiles notice. Successful scene rendering does not establish that every layer/frame is available at every time.
-- The Manufact Cloud Tools view uses `https://manufact.com/` as the MapsGL referrer. Its authentication returned 401 because that domain is not yet allowed; adding it requires separate user approval. Standalone Inspector validation does not establish Cloud Tools or ChatGPT/Claude compatibility.
-- Cloud's CSP log URL-encoded wildcard domains. The template now declares the pinned MapsGL SDK's four explicit `a`/`b`/`c`/`d-prod.v1.mapsgl.api.xweather.com` hosts instead.
+- The Manufact Cloud Tools view uses `https://manufact.com/` as the MapsGL referrer. It initially returned 401 because that domain was not allowed. The user subsequently approved it, and `manufact.com` was saved alongside the existing domains. Standalone Inspector validation does not establish Cloud Tools or ChatGPT/Claude compatibility.
+- Cloud's CSP log URL-encoded wildcard domains. The template now also declares the pinned MapsGL SDK's four explicit `a`/`b`/`c`/`d-prod.v1.mapsgl.api.xweather.com` hosts, retaining provider wildcards for compatible hosts.
+
+### City popover follow-up
+
+- A single-place initial view selects its city and opens the on-map details automatically. Multi-place views keep their overview.
+- In-map search selects the newly loaded city inside the existing request-sequence guard, so a stale context response cannot open an unrelated city's details.
+- Local browser verification: `show-weather-map` opened Dallas details automatically (29°C, Mostly Cloudy). After closing details and searching `zurich,ch`, the map recentered and reopened the details for Zurich (22°C, Cloudy) without clicking its pin.
+- Typecheck and production build passed for this change. Existing map-library chunk-size warnings remain.

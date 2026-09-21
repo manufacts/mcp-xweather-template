@@ -37,7 +37,7 @@ function StormMap({ data, credential }: { data:MapData; credential?:BrowserCrede
   const [unavailable,setUnavailable] = useState<string[]>([]), [failed,setFailed] = useState<string[]>([]);
   const [position,setPosition] = useState(2/3), [playing,setPlaying] = useState(false), [query,setQuery] = useState("");
   const [metric,setMetric] = useState(true), [layerMenu,setLayerMenu] = useState(false), [showLegend,setShowLegend] = useState(false);
-  const [panel,setPanel] = useState<"storms"|"sites"|null>(null), [stormId,setStormId] = useState<string|null>(null), [venueId,setVenueId] = useState<number|null>(null);
+  const [panel,setPanel] = useState<"storms"|"sites"|null>(data.context.venues.length===1?"sites":null), [stormId,setStormId] = useState<string|null>(null), [venueId,setVenueId] = useState<number|null>(data.context.venues.length===1?0:null);
   const [point,setPoint] = useState<{lat:number;lon:number}|null>(null), [sending,setSending] = useState(false), [explained,setExplained] = useState(false);
   const lookup=useCallTool("resolve-weather-location"), refresh=useCallTool("get-storm-context"), display=useDisplayMode(), host=useHostContext(), sendFollowUp=useSendFollowUp();
   const requestSeq=useRef(0), watched=useRef(new WeakSet<object>());
@@ -146,11 +146,11 @@ function StormMap({ data, credential }: { data:MapData; credential?:BrowserCrede
   function scrub(value:number){const t=controller.current?.timeline;if(!t)return;t.pause();t.goToDate(new Date(Math.floor((startMs+value*(endMs-startMs))/1000)*1000));setPosition(value);setPlaying(false);}
   function playback(){const t=controller.current?.timeline;if(!t)return;if(t.isAnimating)t.pause();else t.play(position>.99?0:position);setPlaying(t.isAnimating);}
   function choosePreset(id:string){const p=presets.find(p=>p.id===id)!;setPreset(id);setSelected(p.layers);setError("");if(id==="outlook")scrub(5/6);else if(future)scrub(2/3);}
-  async function loadContext(next=location,queries=context.venues.map(v=>v.location.query)){
+  async function loadContext(next=location,queries=context.venues.map(v=>v.location.query),openPlace=false){
     const seq=++requestSeq.current;
-    try{const r=await refresh.callTool({location:next.query,locations:queries});if(seq===requestSeq.current){setContext(r.structuredContent);setStormId(null);setVenueId(null);setError("");}}catch{if(seq===requestSeq.current)setError("Could not refresh the storm snapshot. The previous snapshot remains visible.");}
+    try{const r=await refresh.callTool({location:next.query,locations:queries});if(seq===requestSeq.current){setContext(r.structuredContent);setStormId(null);setVenueId(openPlace&&r.structuredContent.venues.length?0:null);if(openPlace)setPanel("sites");setError("");}}catch{if(seq===requestSeq.current)setError("Could not refresh the storm snapshot. The previous snapshot remains visible.");}
   }
-  async function search(event:FormEvent){event.preventDefault();if(!query.trim()||lookup.isPending)return;try{const r=await lookup.callTool({query:query.trim()}),next=r.structuredContent;setLocation(next);setQuery("");setPoint(null);map.current?.flyTo({center:[next.longitude,next.latitude],zoom:6.5,duration:1000});await loadContext(next,[next.query]);}catch{setError("Place not found. Try city, country or coordinates.");}}
+  async function search(event:FormEvent){event.preventDefault();if(!query.trim()||lookup.isPending)return;try{const r=await lookup.callTool({query:query.trim()}),next=r.structuredContent;setLocation(next);setQuery("");setPoint(null);setPanel(null);setStormId(null);setVenueId(null);map.current?.flyTo({center:[next.longitude,next.latitude],zoom:6.5,duration:1000});await loadContext(next,[next.query],true);}catch{setError("Place not found. Try city, country or coordinates.");}}
   async function pinPoint(){if(!point||context.venues.length>=5)return;await loadContext(location,[...context.venues.map(v=>v.location.query),`${point.lat},${point.lon}`]);setPanel("sites");setPoint(null);}
   async function explain(){
     setSending(true);setExplained(false);
