@@ -34,7 +34,7 @@ export const venueSchema = z.object({
 export const stormContextSchema = z.object({
   generatedAt: z.string(), stormsAvailable: z.boolean(), radiusKm: z.number(), storms: z.array(stormSchema), venues: z.array(venueSchema), warnings: z.array(z.string()),
 });
-export const mapSchema = z.object({ mode: z.enum(["live", "demo"]), location: locationSchema, layers: z.array(layerSchema), zoom: z.number().min(2).max(12), start: z.string(), now: z.string(), end: z.string(), mapsConfigured: z.boolean(), context: stormContextSchema });
+export const mapSchema = z.object({ mode: z.enum(["live", "demo"]), location: locationSchema, locationSource: z.enum(["explicit", "client", "fallback"]).optional(), locale: z.string().optional(), layers: z.array(layerSchema), zoom: z.number().min(2).max(12), start: z.string(), now: z.string(), end: z.string(), mapsConfigured: z.boolean(), context: stormContextSchema });
 export type WeatherLocation = z.infer<typeof locationSchema>;
 export type WeatherPeriod = z.infer<typeof periodSchema>;
 export type WeatherSite = z.infer<typeof siteSchema>;

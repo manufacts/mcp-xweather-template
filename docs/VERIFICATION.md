@@ -86,3 +86,13 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - Removed the explicit Inspector opt-in from the existing server's start command, the deploy badge and the CLI deployment example. The production command is `npm start -- --host 0.0.0.0`.
 - The README now links to Manufact Cloud Tools, which requires sign-in and organization access, and retains the public MCP endpoint for MCP Apps-compatible clients. Local development still includes the Inspector.
 - The earlier standalone Inspector checks above are historical evidence, not the current production configuration.
+
+### Client preferences and official proxy
+
+- Both map tools read per-request location/locale through `ctx.client.user()`. Live local protocol checks used Zurich coordinates with `de-CH`: both defaulted to one Zurich place, an explicit Dallas argument won, and a later request without hints used the independent Dallas fallback.
+- Thirteen focused tests passed, including invalid/zero coordinates, explicit-location precedence, locale/units fallback and immutable basemap theme generation. Typecheck and production build passed; existing map-library chunk-size warnings remain.
+- Local Inspector browser checks switched from English/US units to German/Swiss formatting and metric units. The host theme toggle changed the basemap, controls and Dallas details from light to dark without resetting the place or timeline. The sparkles icon is removed from the follow-up button.
+- Control translations cover English, German, French, Italian and Spanish; other locales use localized formatting with English control labels. Provider condition text, official alerts and provider legend labels keep their source wording. Map labels use localized vector-tile names when available.
+- The existing Cloud server is named **Xweather Template**; its MCP initialization title is updated in this release. Production still omits the embedded Inspector.
+- Created **Xweather Official**, server `4e8aa477-ffb9-422e-8db4-3232c79d4859`, with Manufact's native external proxy to `https://mcp.api.xweather.com/mcp`. Public proxy endpoint: `https://fast-steel-rlb8y.run.mcp-use.com/mcp`.
+- Compared the proxy's tools/list and raster-app resources/read responses with the official upstream: the 19-tool catalog and app HTML matched. Current-weather and temperature-raster calls succeeded through the proxy. Unauthenticated proxy access returned 401, preserving upstream authentication.

@@ -1058,3 +1058,34 @@ export const basemapStyle: StyleSpecification = {
     }
   ]
 };
+
+const lightColors: Record<string, string> = {
+  "#151d24": "#eef2f0", "#1b2728": "#dbe8db", "#26343d": "#c9d4cf",
+  "#1b242c": "#e3e9e4", "#273942": "#b4d5df", "#102832": "#c4e0e7",
+  "#36424a": "#ffffff", "#53616a": "#9daea8", "#81959f": "#526c72", "#a8b9c0": "#334e54",
+};
+export function themedBasemap(theme: "light" | "dark", locale: string): StyleSpecification {
+  const style = structuredClone(basemapStyle);
+  const language = new Intl.Locale(locale).language;
+  for (const layer of style.layers) {
+    if (theme === "light" && layer.paint) {
+      for (const [property, value] of Object.entries(layer.paint)) {
+        if (typeof value === "string" && lightColors[value]) {
+          (layer.paint as Record<string, unknown>)[property] = lightColors[value];
+        }
+      }
+    }
+    if (layer.type === "symbol" && layer.layout?.["text-field"]) {
+      layer.layout["text-field"] = ["coalesce", ["get", `name:${language}`], ["get", `name_${language}`], ["get", "name"], ["get", "name:latin"]];
+    }
+  }
+  return style;
+}
+/** Update only the basemap, preserving MapsGL sources, playback and selections. */
+export function updateBasemap(map: import("maplibre-gl").Map, theme: "light" | "dark", locale: string) {
+  for (const layer of themedBasemap(theme, locale).layers) {
+    if (!map.getLayer(layer.id)) continue;
+    for (const [key, value] of Object.entries(layer.paint ?? {})) map.setPaintProperty(layer.id, key as Parameters<typeof map.setPaintProperty>[1], value);
+    if (layer.type === "symbol" && layer.layout?.["text-field"]) map.setLayoutProperty(layer.id, "text-field", layer.layout["text-field"]);
+  }
+}

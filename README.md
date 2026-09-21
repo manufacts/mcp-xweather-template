@@ -1,4 +1,4 @@
-# Xweather Storm Explorer MCP App
+# Xweather Template — Storm Explorer MCP App
 
 <img src="public/xweather.png" alt="Xweather" width="80" height="80" />
 
@@ -48,6 +48,18 @@ npx mcp-use deploy --org YOUR_ORG_SLUG --name xweather \
 
 Manufact stores the project link in ignored `.mcp-use/project.json`. Subsequent `npx mcp-use deploy` runs target that server. Set an available custom slug under the server's domain settings, then redeploy to activate it.
 
+## Client preferences
+
+Both apps follow the host's light/dark theme, including the basemap, glass controls, popovers, tooltips and legend text. Theme changes retain the current map view and playback state. The host locale formats dates, times, numbers and map labels, and sets the initial metric/imperial units; the units button remains an explicit override. Controls are translated into English, German, French, Italian and Spanish, with English fallback for other languages. Provider condition descriptions and official alerts retain their source wording. Times remain local to the displayed place, with its timezone shown on the timeline.
+
+Omit `location` / `locations` to use the approximate location supplied in tool-call `_meta["openai/userLocation"]`, read through `ctx.client.user()`. Valid latitude/longitude takes priority over a city/region/country hint. Explicit tool arguments always win. With no usable location hint, the map falls back to Dallas and the multi-place view to Dallas/Arlington/Plano. The app does not request browser geolocation or infer location from the locale/timezone. The request's `openai/locale` is used until the app host supplies its locale.
+
+## Official Xweather proxy demo
+
+A separate [Xweather Official server in Manufact](https://manufact.com/cloud/xweather/servers/4e8aa477-ffb9-422e-8db4-3232c79d4859/tools) proxies `https://mcp.api.xweather.com/mcp` through Manufact's native external-server gateway. It preserves Xweather's own 19 tools and raster-map MCP App. This template's MapsGL views are a separate implementation.
+
+Proxy endpoint: `https://fast-steel-rlb8y.run.mcp-use.com/mcp`. Xweather authentication is still required by the upstream service. The signed-in Cloud demo uses the configured demo account. No upstream service code is copied or redeployed.
+
 ## Run locally
 
 Requires Node.js 22.22.2 or newer.
@@ -59,14 +71,14 @@ cp .env.example .env
 npm run dev
 ```
 
-Open [the Inspector](http://localhost:3000/mcp/inspector?server=http%3A%2F%2Flocalhost%3A3000%2Fmcp). Execute **show-weather-dashboard** for Dallas, Arlington and Plano, or **show-weather-map** for one location and optional place pins. Both render the same map-only app. MCP endpoint: `http://localhost:3000/mcp`.
+Open [the Inspector](http://localhost:3000/mcp/inspector?server=http%3A%2F%2Flocalhost%3A3000%2Fmcp). Execute either map tool without location arguments to use client-supplied location hints. With no hints, **show-weather-dashboard** shows Dallas, Arlington and Plano, and **show-weather-map** shows Dallas. Supply location arguments to choose other places. Both render the same map-only app. MCP endpoint: `http://localhost:3000/mcp`.
 
 Keep any configured `.env` private; the repository contains only `.env.example`.
 
 | Tool | Purpose |
 | --- | --- |
-| `show-weather-map` | Storm Explorer, default Dallas; optional locations, layers and zoom. |
-| `show-weather-dashboard` | Up to five monitored places on the same map; default Dallas/Arlington/Plano. |
+| `show-weather-map` | Storm Explorer, default client location (Dallas fallback); optional locations, layers and zoom. |
+| `show-weather-dashboard` | Up to five monitored places; default client location (Dallas/Arlington/Plano fallback). |
 | `resolve-weather-location` | App-only search for a city or coordinates. |
 | `get-storm-context` | App-only refresh of nearby storm cells and place weather/alerts. |
 
@@ -119,7 +131,7 @@ npm run build
 npm run test:live
 ```
 
-Nine focused tests cover sample/live separation, sanitized failures, missing data, timestamps, credential separation, storm normalization and cone boundaries. Live smoke checks four tools/two resources, live place weather/storm cells, timeline configuration, invalid input and credential redaction. Visual rendering is checked separately in the Inspector.
+Thirteen focused tests cover sample/live separation, sanitized failures, missing data, timestamps, credential separation, storm normalization, cone boundaries, client-location precedence, locale defaults and basemap themes. Live smoke checks four tools/two resources, live place weather/storm cells, timeline configuration, invalid input, credential redaction, client-location defaults for both tools and explicit-location precedence. Visual rendering is checked separately in the Inspector.
 
 See [verification evidence](docs/VERIFICATION.md) for the checks performed and their limits. ChatGPT/Claude execution requires separate host validation.
 
