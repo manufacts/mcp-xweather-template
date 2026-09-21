@@ -8,7 +8,7 @@ const server = new MCPServer({
   name: "xweather-storm-explorer", title: "Xweather Storm Explorer", version: "0.2.0",
   description: "Explore storms, lightning and forecast threats on an interactive Xweather map.",
   instructions: "Use show-weather-map for the Storm Explorer. Optional locations add up to five monitored place pins. Maps include recent observations and one hour of forecast; distinguish those. Storm-cell lists are the latest US radar snapshot. Exposure means intersection with available fresh forecast cones, never a guarantee of safety. Say when data is unavailable or sample. Never request API credentials in tool arguments.",
-  websiteUrl: "https://www.xweather.com", icons: [{ src: "icon.svg", mimeType: "image/svg+xml", sizes: ["512x512"] }],
+  websiteUrl: "https://www.xweather.com", icons: [{ src: "xweather.png", mimeType: "image/png", sizes: ["200x200"] }],
 });
 const network = ["https://data.api.xweather.com", "https://maps.api.xweather.com", "https://*.mapsgl.api.xweather.com", "https://*.api.mapsgl.aerisapi.com", "https://maps1.api.xweather.com", "https://maps2.api.xweather.com", "https://maps3.api.xweather.com", "https://maps4.api.xweather.com", "https://api.aerisapi.com", "https://maps.aerisapi.com", "https://cdn.aerisapi.com", "https://tile.openstreetmap.org"];
 network.push("https://tiles.openfreemap.org");

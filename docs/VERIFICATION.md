@@ -46,7 +46,18 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - Sampled live storm cells did **not** contain forecast tracks/cones. Normalization and cone math have automated coverage, but real forecast geometry rendering and real site/cone intersection were not visually verified. The UI labels unavailable assessments instead of inventing tracks or declaring safety.
 - Cell queries return at most 30 records within 400 km, not every possible storm affecting a site. Exposure considers fresh, unexpired cones among those returned cells.
 - Map playback and the latest storm/place snapshot are separate. Observed pins are hidden away from current time; detail copy and assistant context identify the latest snapshot.
-- Local browser/protocol checks are not deployment or ChatGPT/Claude host proof. Host credential origins, CSP, WebGL and assistant messaging need validation before release.
+- ChatGPT/Claude execution has not been verified. Host credential origins, CSP, WebGL and assistant messaging need separate validation for those hosts.
 - Earlier upstream Xweather MCP discovery found 19 tools, server version 3.2.4 and raster UI metadata. This app uses direct Weather API calls; upstream widget execution was not the data adapter.
 - Weather refresh is subject to a five-minute cache. Layer access, geographic coverage and retained history depend on the account/dataset. Slow connections can show temporary playback gaps.
-- MapsGL sessions consume quota: 150 accesses per five-minute wall-clock bucket. No paid plan, deployment or publication was created.
+- MapsGL sessions consume quota: 150 accesses per five-minute wall-clock bucket. No paid plan was created; the deployment and public template publication are recorded below.
+
+## Manufact deployment — September 21, 2026
+
+- Public GitHub template: https://github.com/manufacts/mcp-xweather-template (main branch, GitHub template flag enabled).
+- Manufact organization: `xweather`; server `f0b72e21-8895-409d-9f99-52eaca9e6495`; managed server slug `xweather`.
+- First production deployment `084e6736-5886-4651-b6a0-52bc8dd7ea27` reached running with the custom slug active.
+- Live MCP smoke against `https://xweather.run.mcp-use.com/mcp` passed: four tools, two resources, three live sites, 30 storm cells, invalid-input rejection and credential redaction.
+- Public Inspector HTML responds successfully. Visual production-map verification is separate from these protocol checks.
+- The provided logo was downloaded to `public/xweather.png` and reuploaded to Manufact's CDN for both organization and dashboard server branding. MCP metadata references the bundled asset.
+- GitHub source excludes `.env*` (except the placeholder `.env.example`), generated build output and the local project link. A scan of every staged source file found no configured credential values.
+- README includes the official cloud deploy badge, build/start commands, environment setup and the live demo link.

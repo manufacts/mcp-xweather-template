@@ -1,8 +1,19 @@
 # Xweather Storm Explorer MCP App
 
+<img src="public/xweather.png" alt="Xweather" width="80" height="80" />
+
 A deployable MCP Apps template built with `mcp-use@2.5.1`, React, `@xweather/mapsgl@1.10.1` and `maplibre-gl@6.10.0`.
 
 A map-only weather app with live storm cells, lightning, forecast layers and up to five monitored places. Search, scene presets, storm details, legend, timeline and assistant follow-up all float over the map. The view requests `prefersBorder: true`, uses the host's `--border-radius-xl`, and combines blurred glass surfaces with pill-shaped Fluid Functionalism controls. See [business value and use cases](docs/USE_CASES.md).
+
+## Live demo
+
+[Open the live Storm Explorer](https://xweather.run.mcp-use.com/mcp/inspector?server=https%3A%2F%2Fxweather.run.mcp-use.com%2Fmcp&tab=tools) and execute **show-weather-dashboard** for the three-site view, or **show-weather-map** to choose a location.
+
+**MCP endpoint:** `https://xweather.run.mcp-use.com/mcp`  
+**Hosted by:** [Xweather on Manufact](https://manufact.com/cloud/xweather/servers/f0b72e21-8895-409d-9f99-52eaca9e6495/overview)
+
+The shared demo uses a quota-limited Xweather Developer account. Deploy your own copy with your own credentials for continued use. The Xweather logo is bundled in `public/xweather.png`; deployed apps serve their own copy.
 
 ## Deploy to Manufact
 
