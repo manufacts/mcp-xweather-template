@@ -13,6 +13,7 @@ const server = new MCPServer({
 // Explicit shard hosts also work with MCP hosts that URL-encode CSP wildcards.
 const network = [
   "https://data.api.xweather.com", "https://maps.api.xweather.com",
+  "https://*.mapsgl.api.xweather.com", "https://*.api.mapsgl.aerisapi.com",
   ...["a", "b", "c", "d"].map(shard => `https://${shard}-prod.v1.mapsgl.api.xweather.com`),
   "https://maps1.api.xweather.com", "https://maps2.api.xweather.com",
   "https://maps3.api.xweather.com", "https://maps4.api.xweather.com",
