@@ -61,3 +61,15 @@ The final map-only implementation was exercised in the local Codex in-app Inspec
 - The provided logo was downloaded to `public/xweather.png` and reuploaded to Manufact's CDN for both organization and dashboard server branding. MCP metadata references the bundled asset.
 - GitHub source excludes `.env*` (except the placeholder `.env.example`), generated build output and the local project link. A scan of every staged source file found no configured credential values.
 - README includes the official cloud deploy badge, build/start commands, environment setup and the live demo link.
+
+### Public deployment follow-up
+
+- Runtime commit `a54a44a` reached running/complete in deployment `c186a0a1-0df6-407e-9da8-8c2deb269e6d`. Typecheck, production build and live MCP smoke passed after the explicit MapsGL CSP host change.
+- The saved browser-key domains include `localhost`, `127.0.0.1` and the user-approved `xweather.run.mcp-use.com`.
+- Production MCP initialization resolves the bundled icon to `https://xweather.run.mcp-use.com/mcp/_mcp-use/public/xweather.png`. That URL returned PNG bytes identical to the checked-in file. The organization CDN logo and the server's stored icon were verified; the stored server image also matches the source file.
+- The full README deploy-button URL opens **Deploy xweather**, selects the public `manufacts/mcp-xweather-template` repository on `main`, and uses the Node runtime. No duplicate deployment was submitted.
+- In the public server-hosted Inspector, live radar, temperature shading and wind particles rendered. Three place pins and 30 live storm cells were present. Dallas details showed live weather; a selected cell showed reflectivity, hail probability, movement and its missing-track notice.
+- Xweather initially returned 401 for MapsGL authentication and 403 for Maps layer metadata after the new domain was saved. The map service cached the rejection with `max-age=600,s-maxage=600`; after that cache expired, the same allowed-origin metadata request returned 200. Native MapsGL storm tracks/cones then rendered. This does not verify the separate Weather API cone normalization/exposure path, whose sampled records still lacked tracks.
+- Two later radar tile requests failed, and the UI showed its unavailable-tiles notice. Successful scene rendering does not establish that every layer/frame is available at every time.
+- The Manufact Cloud Tools view uses `https://manufact.com/` as the MapsGL referrer. Its authentication returned 401 because that domain is not yet allowed; adding it requires separate user approval. Standalone Inspector validation does not establish Cloud Tools or ChatGPT/Claude compatibility.
+- Cloud's CSP log URL-encoded wildcard domains. The template now declares the pinned MapsGL SDK's four explicit `a`/`b`/`c`/`d-prod.v1.mapsgl.api.xweather.com` hosts instead.

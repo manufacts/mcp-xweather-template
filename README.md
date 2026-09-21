@@ -32,7 +32,7 @@ A deployment without Xweather credentials starts in labelled sample mode. To ena
 | `XWEATHER_MAPSGL_CLIENT_SECRET` | That browser credential's client secret |
 | `XWEATHER_MAPSGL_RESTRICTED` | `true`, after configuring its domain restrictions |
 
-Create credentials in the [Xweather Developer Portal](https://data.portal.xweather.com/). Restrict the browser credential to your deployed app's hostname and any MCP host iframe origins you intend to support. Never put server credentials in the browser fields or commit credentials to GitHub. Deployment environment variables stay in Manufact, outside the repository.
+Create credentials in the [Xweather Developer Portal](https://data.portal.xweather.com/). Restrict the browser credential to your deployed app's hostname and any MCP host iframe origins you intend to support. The server-hosted Inspector uses your deployed hostname; Manufact Cloud's Tools preview uses `manufact.com`, which needs its own allowed-domain entry. Previous credential rejections can remain cached by Xweather's map service for ten minutes after a domain change; reload the preview after that cache expires. Never put server credentials in the browser fields or commit credentials to GitHub. Deployment environment variables stay in Manufact, outside the repository.
 
 To deploy from the CLI instead:
 
@@ -104,7 +104,7 @@ Without credentials, `WEATHER_MODE=demo` shows labelled sample place weather for
 - OpenFreeMap vector tiles provide the dark basemap; OpenFreeMap, OpenMapTiles, OpenStreetMap and Xweather attribution stays inside the map.
 - `npm run prepare:assets` copies the pinned MapLibre module workers to `public/maplibre/` as `.js`, preserving the correct JavaScript MIME type. The view sets an explicit worker URL so MCP view bundling does not break worker resolution. `predev` and `prebuild` run this plus style generation automatically.
 - MapsGL 1.10.1 reads the old `map.transform` property. A read-only getter bridges it to MapLibre 6's `painter.transform`. Reverify the bridge and workers before upgrading either package.
-- CSP includes Xweather/Aeris weather hosts, OpenFreeMap assets and `blob:` connections required by MapsGL workers. Deployment needs the actual host's credential origins and sandbox validation.
+- CSP includes the four explicit MapsGL shard hosts used by the pinned SDK, Xweather/Aeris weather hosts, OpenFreeMap assets and `blob:` connections required by MapsGL workers. Explicit shard names avoid host implementations that URL-encode wildcard domains. Deployment needs the actual host's credential origins and sandbox validation.
 - Timeline dates use whole seconds because MapsGL truncates milliseconds. Slow connections may show gaps while frames load.
 - MapsGL usage is **150 accesses per five-minute wall-clock session bucket**. The Developer plan used for this PoC has 15,000 monthly accesses. Close unused map views.
 - Map libraries load dynamically. Builds pass with large-chunk warnings.
